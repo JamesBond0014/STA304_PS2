@@ -16,7 +16,7 @@ sample_province <- function(
                      0.0009, 0.005)
   
   party_prob <- party_prob %>% append(0.02) #adding no response
-  party_prob <- party_prob /sum(party_prob) #normalize error
+  party_prob <- party_prob /sum(party_prob) #normalize probabilities
   
   #categories of surveys
   parties <-c("Liberal", "Conservative", "NDP", "Green", 
@@ -26,6 +26,8 @@ sample_province <- function(
   age <- c("18 - 24","25 - 44","45 - 64","65 +", 'N/A')
   sizes = round(province_prob * total_size)
   
+  
+  #sample the survey
   survey_data <- tibble(
     party = sample(x=parties, size = sizes[idx], 
                    replace = TRUE,prob=party_prob),
@@ -38,18 +40,25 @@ sample_province <- function(
                      replace=TRUE, prob=c(0.88,0.07, 0.05)),
     age = sample(x = age, replace=TRUE, size = sizes[idx], prob=age_prob),
     usage = rpois(sizes[idx], 1),
+    #mimic outliers, cover for where people enter answer such as a million, 
+    # 69, 420 etc... generalize to 50 and I will filter for such results
     usage_outlier = sample(x=c(50,0), replace=TRUE, 
-                           size=sizes[idx], prob=c(0.04,0.96))
+                           size=sizes[idx], prob=c(0.04,0.96)) 
   )
   
+  #Apply outlier to poisson distributed data
   survey_data$usage <- with(survey_data, usage*((usage_outlier>2)*0 + 
                                                   (usage_outlier==0)*1) + 
-                              usage_outlier)
+                              usage_outlier) 
+  
+  #remove outlier column
   survey_data <- subset(survey_data, select=-c(usage_outlier))
   
+  #bound the min and max for familiarity field (rnorm)
   survey_data$familiarity <- pmax(0, survey_data$familiarity)
   survey_data$familiarity <- pmin(3, survey_data$familiarity)
   
+  #replace fields with more human friendly labels. 
   survey_data <-  survey_data %>% 
     mutate(familiarity = as.character(familiarity)) %>% 
     mutate(familiarity = replace(familiarity, familiarity == '0', 
@@ -64,7 +73,9 @@ sample_province <- function(
   return (survey_data)
 }
 
-
+#sample from each province.
+# I attempted to adjust the probabilities slightly between strata's in order
+# to make it realistic
 bc_survey <- sample_province(1, 
                              vote_prob = c(42, 39, 19), 
                              party_prob = 
@@ -118,6 +129,7 @@ nu_survey <- sample_province(13,
                              party_prob = 
                                c(0.002, 0.005, 0.99, 0.001, 0.00, 0.00, 0.002))
 
+#Bind the data into a single dataframe
 survey_data <- bind_rows(ab_survey, bc_survey)
 survey_data <- bind_rows(survey_data, sk_survey)
 survey_data <- bind_rows(survey_data, mb_survey)
@@ -130,4 +142,6 @@ survey_data <- bind_rows(survey_data, pe_survey)
 survey_data <- bind_rows(survey_data, nw_survey)
 survey_data <- bind_rows(survey_data, yk_survey)
 survey_data <- bind_rows(survey_data, nu_survey)
+
+#export to CSV
 write.csv(survey_data,"./assets/simulated.csv", row.names = TRUE)
