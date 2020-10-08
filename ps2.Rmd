@@ -157,7 +157,26 @@ the decriminalization of narcotics as a method to fight the increasing amounts o
 overdoses and drug possession charges. The large amount of support in British 
 Columbia can indicate possible support within other provinces as well.
 
-In addition, the CBC article (Harris, 2020) reference previously noted that the Liberal Party's
+With more detailed data, it can be determined how serious Canadians view the drug
+crisis in Canada, and how that effects their opinions (Figure 8). Currently there are no 
+noticeable disparities between age groups and their support of decriminalizing 
+narcotics however with more detailed data there should start to be a noticeable difference
+as suggested by (Harris, 2019), as many youth delegates are advocating support. 
+Furthermore Simpson (2020) showed that the older age group are more resistant to
+the idea compared to a younger group. Further education could potentially cause 
+polarization of opinions, likely against decriminalization in an elderly age group.
+
+With more education on the topic of decriminalizing narcotics in Canada, there
+should be a shift to a where most people are familiar on the topic, hopefully
+lowering the amount of unsure responses and gain more support or opposition on
+decriminalizing narcotics unlike the responses showed in Figure 7. Given as such, 
+charts such as Figure 9 should show an increase on average. People might perceive
+drug use to be more common if there was a increase in information provided about 
+the drug crisis happening in various cities in Canada, so this field can be used to 
+track information spread especially if education programs were targeted at specific 
+provinces first to test effectiveness.
+
+In addition, the CBC article (Harris, 2019) reference previously noted that the Liberal Party's
 reluctance to openly support  the decriminalization of narcotics in Canada is due
 to the stigma against the idea. The Conservative party mislead voters ahead of the
 2019 election by blurring the definition of legalization and decriminalization.
@@ -168,7 +187,7 @@ population's knowledge of the pros and cons of decriminalization of narcotics as
 well as learning from previous cases of successful attempts (such as in Portugal) (Drug Policy Alliance, 2020)
 the Liberal Party of Canada can potentially educate voters and gain further support
 in order to win a majority election in 2023. A recent article by Public Health Ontario
-suggested that drug use has increased dramatically since the Covid-19 pandemic started. 
+suggested that drug use has increased dramatically since the COVID-19 pandemic started (Public Health Ontario, 2020). 
 This can potentially be a good time to target a drug crisis by introducing new
 methods of fighting the crisis through decriminalization. This survey can be continuously 
 used to poll any changes in opinion of Canadians as the Liberal Party of Canada
@@ -209,7 +228,9 @@ distributions. In this report, we used previous research to back up and influenc
 certain conclusions in order to provide a more realistic conclusion, which may contradict
 simulated data. We can also move to a more official polling method and abandon using
 social media, although social media does offer quick and large sample populations. 
-
+Another step would be to try different wordings of decriminalizing narcotics and
+explore differnet levels of decriminalization. Voters may have various views depending on 
+drug possession, use or distribution decriminalization. 
 
 \newpage
 
@@ -223,6 +244,10 @@ social media, although social media does offer quick and large sample population
   
   Harris, K. (2019). Scheer suggests Liberals could decriminalize hard drugs, despite Trudeau's denial,
   https://www.cbc.ca/news/politics/scheer-trudeau-decriminalization-drugs-1.5324106
+  
+  Public Health Ontario. (2020).  Rapid review: substance use-related harms and risk factors during periods of disruption,
+  https://www.publichealthontario.ca/-/media/documents/ncov/main/2020/08/substance-use-related-harms-disruption.pdf?la=en
+  
 
   Simpson, S. (2020). Canadians Split on Decriminalization of Possession of Narcotics, Prostitution,
   https://www.ipsos.com/en-ca/news-polls/Canadians-Split-On-Decriminalization-of-Possession-of-Narcotics-Prostitution
@@ -335,7 +360,7 @@ grouped_bar_chart(grouped_votes, "Party", "Vote pecentage",
 
 ```
 
-```{r, fig.cap="Province's support of educaion into decriminalization"}
+```{r, fig.cap="Province's support of education into decriminalization"}
 grouped_votes <- survey_data %>%
   count(province, educate) %>%
   rename(
@@ -373,6 +398,41 @@ grouped_bar_chart(grouped_votes, "Familiarity", "Votes",
                   "Support of Education on decriminalization 
                   of drugs by familiarity") 
 ```
+
+```{r, fig.cap="Age group support of decriminalization"}
+grouped_votes <- survey_data %>%
+  count(age, opinion) %>%
+  rename(
+    count=n
+  )
+total_vote <- aggregate(grouped_votes$count, 
+                        by=list(age=grouped_votes$age), FUN=sum)
+
+grouped_votes<-left_join(grouped_votes, total_vote, by="age") %>%
+  rename(total=x) %>%
+  mutate(value=count/total) %>%
+  rename(grouped=age, category=opinion)
+grouped_bar_chart(grouped_votes, "Age Group", "Vote pecentage", 
+                  "Support of Education on decriminalization 
+                  of drugs by age")
+```
+
+
+
+```{r, fig.cap="Perceived Drug Usage"}
+grouped_votes <- survey_data %>% filter(usage<=40) %>% select(c(province, usage))
+grouped_votes$usage %>%
+  aggregate(by=list(province=grouped_votes$province), FUN=mean) %>%
+  ggplot(aes(x = province, y=x)) +
+  geom_bar(stat="identity") +
+  scale_x_discrete("Provinces") +
+  scale_y_continuous("Average perceived drug use")+
+  ggtitle("Perceived drug usage by province")
+
+
+```
+
+
 
 \newpage
 

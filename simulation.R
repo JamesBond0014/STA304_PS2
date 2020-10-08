@@ -38,8 +38,8 @@ sample_province <- function(
                      replace=TRUE, prob=c(0.88,0.07, 0.05)),
     age = sample(x = age, replace=TRUE, size = sizes[idx], prob=age_prob),
     usage = rpois(sizes[idx], 1),
-    usage_outlier = sample(x=c(420, 69, 42069,0), replace=TRUE, 
-                           size=sizes[idx], prob=c(0.0142,0.0169,0.0089,0.96))
+    usage_outlier = sample(x=c(50,0), replace=TRUE, 
+                           size=sizes[idx], prob=c(0.04,0.96))
   )
   
   survey_data$usage <- with(survey_data, usage*((usage_outlier>2)*0 + 
