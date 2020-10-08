@@ -1,0 +1,57 @@
+---
+title: "People who are likely to vote for Biden are also likely to vote."
+author: "Rohan Alexander"
+date: '2020-10-01'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Executive summary
+
+Petit Poll has been asked by the Rohan and Sam Party ('the Party') to survey British Columbia to understand whether people are likely to vote for the Party in the upcoming general election. We surveyed....
+
+# Introduction
+
+
+# Survey methodology 
+
+- What is the population frame and sample
+- What sampling methods will you use and why e.g. you could choose SRSWOR stratified etc. What are some of the statistical properties that the method brings to the table e.g. for SRSWOR you could discuss Wu Thompson Theorem 2.2. etc as appropriate
+- How are you going to reach your desired respondents
+- How much do you estimate this will cost
+- What steps will you take to deal with non-response and how will non-response affect your survey
+- How are you going to protect respondent privacy
+
+
+and more...
+
+
+# Results
+
+# Discussion 
+
+## Survey
+
+## Results
+
+## Weakness and areas for future
+
+
+# Appendix
+
+## Survey
+
+Add a link to the survey and screen shots of the questions.
+
+
+# References
+
+- Wickham et al., (2019). Welcome to the tidyverse. Journal of Open
+  Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+- R Core Team (2020). R: A language and environment for statistical
+  computing. R Foundation for Statistical Computing, Vienna, Austria.
+  URL https://www.R-project.org/.
